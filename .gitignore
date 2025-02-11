@@ -1,11 +1,11 @@
 # Editor directories and files
-/.idea/
-/__pycache__/
+.idea/
+__pycache__/
 
 # virtualenv
 venv/
 ENV/
 
 # debug
-/dist/
-/build/
+dist/
+build/
