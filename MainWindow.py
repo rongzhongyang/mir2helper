@@ -2,35 +2,12 @@ import datetime
 import MainWindowUI
 from PyQt6 import QtWidgets
 from PyQt6.QtGui import QIcon, QPixmap
-import subprocess
 import icon
-from ctypes import *
 import win32gui
 import win32con
 import win32api
 import configparser
 from MyThread import SubWorkerThread, CloneThread
-
-
-class TBBUTTON(Structure):
-    _pack_ = 1
-    _fields_ = [
-        ('iBitmap', c_int),
-        ('idCommand', c_int),
-        ('fsState', c_ubyte),
-        ('fsStyle', c_ubyte),
-        ('bReserved', c_ubyte * 2),
-        ('dwData', c_ulong),
-        ('iString', c_int),
-    ]
-
-
-class TEXT(Structure):
-    _fields_ = [
-        ('value', c_char * 128),
-        ('raw', c_char * 128)
-    ]
-
 
 def set_icon():
     # 把icon.ico文件以bytes写入.py文件中的变量icon_bytes中
@@ -42,10 +19,6 @@ def set_icon():
             icon_py.write(icon_bytes)
     except:
         ...
-
-
-# set_icon()
-
 
 def get_icon():
     # 从icon_bytes变量中提取bytes字符串，并转成QPixmap
@@ -68,14 +41,14 @@ class CMyMainWindow(QtWidgets.QMainWindow, MainWindowUI.Ui_MainWindow):
         self.lineEdit_mainDir_2.setText(config['conf']['主区文件夹'])
         self.lineEdit_minDir.setText(config['conf']['小区文件夹'])
         self.lineEdit_maxDir.setText(config['conf']['大区文件夹'])
-        self.lineEdit_thisDir.setText(config['conf']['合区文件夹'])
         self.lineEdit_workTime.setText(config['conf']['合区时间'])
         self.lineEdit_minPort.setText(config['conf']['最小端口'])
         self.lineEdit_maxPort.setText(config['conf']['最大端口'])
         self.label_6.setText(config['conf']['合区工具'])
         self.label_listfile.setText(config['conf']['列表文件'])
+        self.getthisDir()
         # 禁用窗口最大化按钮
-        self.setWindowTitle("航界软件 0.0.1")
+        self.setWindowTitle("航界软件-传奇助手 1.0.0")
         self.setWindowIcon(QIcon(get_icon()))
         self.setFixedSize(self.width(), self.height())  # 固定窗口小大
         self.开合区状态 = False
@@ -92,6 +65,21 @@ class CMyMainWindow(QtWidgets.QMainWindow, MainWindowUI.Ui_MainWindow):
                         }
                     """)
         self.taskHandle = 0
+
+    def getthisDir(self):
+        列表文件 = self.label_listfile.text()
+        分区list = []
+        if 列表文件:
+            with open(列表文件, 'r') as fp:
+                strList = fp.readlines()
+                for temStr in strList:  # 获取周循环列表
+                    if '循环分区' in temStr:
+                        分区list.append(temStr)
+            端口 = 7000 + int(分区list[-1].split('|70')[1][:2])
+            合区目录 = self.lineEdit_mainDir.text().rsplit('_', 1)[0] + '_' + str(端口)
+            self.lineEdit_thisDir.setText(合区目录)
+        else:
+            self.lineEdit_thisDir.text('先设置列表文件')
 
     def enum_windows_find(self, hwnd, lparam):
         '''依据窗口标题 和窗口类名称 查询窗口'''
@@ -180,7 +168,7 @@ class CMyMainWindow(QtWidgets.QMainWindow, MainWindowUI.Ui_MainWindow):
             self.pushButton_4.setDisabled(False)
             self.pushButton_select_listfile.setDisabled(False)
             self.开合区状态 = not self.开合区状态
-            self.thread.exit()
+            self.thread.stop()
         else:
             self.pushButton_start.setText('停止')
             # 写配置文件
@@ -223,8 +211,12 @@ class CMyMainWindow(QtWidgets.QMainWindow, MainWindowUI.Ui_MainWindow):
             self.thread.start()
 
     def updateMsg(self, msg):
-        msg = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') + "->" + msg
-        self.textBrowser_log.append(msg)
+        if msg:
+            thistime = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            msg = f'<span style="color: green;">{thistime}：</span><span style="color: blue;">{msg}</span>'
+            self.textBrowser_log.append(msg)
+        else:
+            self.getthisDir()
 
     def slot_select_file(self):
         # 打开文件选择对话框

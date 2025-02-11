@@ -1,6 +1,5 @@
-import datetime
 from PyQt6 import QtCore
-import time, os
+import time
 import win32gui
 import win32con
 import win32api
@@ -53,6 +52,16 @@ class SubWorkerThread(QtCore.QThread):
                 win32gui.PostMessage(确认信息[0], win32con.WM_KEYDOWN, win32con.VK_RETURN, 0)
                 win32gui.PostMessage(确认信息[0], win32con.WM_KEYUP, win32con.VK_RETURN, 0)
 
+    def 点击提示信息(self):
+        确认信息 = []
+        while not len(确认信息):
+            lparam = [f'提示信息', '#32770', 确认信息]
+            win32gui.EnumWindows(self.enum_windows_find, lparam)
+            确认信息 = lparam[2]
+            if len(确认信息):
+                win32gui.PostMessage(确认信息[0], win32con.WM_KEYDOWN, win32con.VK_RETURN, 0)
+                win32gui.PostMessage(确认信息[0], win32con.WM_KEYUP, win32con.VK_RETURN, 0)
+
     def 获取引擎控制台窗口句柄(self, 文件夹名):
         引擎控制台列表 = []
         lparam = [f'{文件夹名}\\]', 'TfrmMain', 引擎控制台列表]
@@ -74,8 +83,10 @@ class SubWorkerThread(QtCore.QThread):
         if 停止服务器按键句柄:
             self.鼠标点击(停止服务器按键句柄)
             self.点击确认信息()
+        self.msg.emit(f'{文件夹名} 停止中...')
         while not self.查找子窗口句柄(引擎控制台窗口句柄, '启动游戏服务器(&S)'):
             time.sleep(0.5)
+        self.msg.emit(f'{文件夹名} 停止完成')
 
     def 启动服务器(self, 文件夹名):
         引擎控制台窗口句柄 = self.获取引擎控制台窗口句柄(文件夹名)
@@ -83,6 +94,47 @@ class SubWorkerThread(QtCore.QThread):
         if 启动服务器按键句柄:
             self.鼠标点击(启动服务器按键句柄)
             self.点击确认信息()
+        self.msg.emit(f'{文件夹名} 启动中...')
+
+    def 清理数据(self, 文件夹名):
+        引擎控制台窗口句柄 = self.获取引擎控制台窗口句柄(文件夹名)
+        开始清理按键句柄 = self.查找子窗口句柄(引擎控制台窗口句柄, '开始清理')
+        if 开始清理按键句柄:
+            self.鼠标点击(开始清理按键句柄)
+            self.点击确认信息()
+            self.点击提示信息()
+        self.msg.emit(f'{文件夹名} 数据清理完成')
+
+    def 更新列表(self):
+        filePath = self.data['列表文件']
+        writeStrList = []
+        with open(filePath, 'r') as f_open:
+            strList = f_open.readlines()
+            day = time.strftime('%m{}%d{}', time.localtime()).format('月', '日')
+            moth = time.strftime('%m{}', time.localtime()).format('月')
+            week = time.strftime('%W{}', time.localtime()).format('周')
+            循环列表 = []
+            for temStr in strList:  # 获取周循环列表
+                if '循环分区' in temStr:
+                    循环列表.append(temStr)
+            循环列表 = 循环列表[-1:] + 循环列表[:-1]  # 周列表循环
+            新列表 = []
+            循环列表[0] = 循环列表[0][0:循环列表[0].find('【') + 1] + day + 循环列表[0][循环列表[0].find('】'):]
+            循环列表[0] = 循环列表[0].replace('】', '】刚开一秒')  # 添加新区刚开一秒标签
+            循环列表[1] = 循环列表[1].replace('】刚开一秒', '】')  # 去除昨天刚开一秒标签
+            i = 0
+            for temStr in strList:
+                if '分区' in temStr:
+                    新列表.append(循环列表[i])
+                    i = i + 1
+                else:
+                    新列表.append(temStr)
+        writeStrList = 新列表
+        with open(filePath, 'w') as f_open:  # 写入列表文
+            for temStr in writeStrList:
+                f_open.write(temStr)
+        self.msg.emit('')
+        self.msg.emit(f'{filePath} 列表文件更新成功')
 
     def 合区任务(self, 主区目录, 合区目录):
         # 修改合区工具配置
@@ -139,18 +191,30 @@ class SubWorkerThread(QtCore.QThread):
         while True:
             style = win32gui.GetWindowLong(子窗口列表[0], win32con.GWL_STYLE)
             if bool(style & win32con.WS_DISABLED):
-                print("合区中...")
                 time.sleep(0.5)
             else:
-                print("合区完成")
                 win32gui.PostMessage(合区工具[0], win32con.WM_CLOSE, 0, 0)
                 break
+        self.msg.emit(f'{合区目录} 合并到 {主区目录} 完成')
+
+    def 获取合区目录(self):
+        列表文件 = self.data['列表文件']
+        分区list = []
+        if 列表文件:
+            with open(列表文件, 'r') as fp:
+                strList = fp.readlines()
+                for temStr in strList:  # 获取周循环列表
+                    if '循环分区' in temStr:
+                        分区list.append(temStr)
+            端口 = 7000 + int(分区list[-1].split('|70')[1][:2])
+            合区目录 = self.data['主区文件夹'].rsplit('_', 1)[0] + '_' + str(端口)
+        return 合区目录
 
     def 开始合区(self):
         config = configparser.ConfigParser()
         config.read('config.ini')
         主区目录 = config['conf']['主区文件夹']
-        合区目录 = config['conf']['合区文件夹']
+        合区目录 = self.获取合区目录()
         if 合区目录 == config['conf']['大区文件夹']:  # 如果碰到最大区名，开始循环
             下次合区目录 = config['conf']['大区文件夹']
         else:
@@ -162,17 +226,23 @@ class SubWorkerThread(QtCore.QThread):
         self.停止服务器(主区目录)
         self.停止服务器(合区目录)
         self.合区任务(主区目录, 合区目录)
+        self.清理数据(合区目录)
+        self.启动服务器(主区目录)
+        self.启动服务器(合区目录)
+        self.更新列表()
 
     def run(self):
-        self.msg.emit('合区任务线程启动...')
+        self.msg.emit('开合区任务线程启动...')
         while self.running:
             现在时间 = time.strftime("%H:%M:%S", time.localtime())
             现在日期 = time.strftime('%d{}', time.localtime()).format('日')
             现在星期 = time.strftime("%w{}", time.localtime()).format('周')
-            if self.data['合区时间'] == 现在星期+现在时间:
+            if self.data['合区时间'] in 现在星期+现在时间:
                 self.msg.emit('开始运行合区任务')
                 self.开始合区()
-            time.sleep(1)
+                time.sleep(1)
+            time.sleep(0.5)
+        self.msg.emit('开合区任务线程结')
 
     def stop(self):
         """ 停止线程 """
