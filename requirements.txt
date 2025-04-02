@@ -4,3 +4,4 @@ pyinstaller
 pywinauto
 pywin32
 psutil
+requests
