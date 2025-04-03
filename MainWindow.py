@@ -39,6 +39,8 @@ class CMyMainWindow(QtWidgets.QMainWindow, MainWindowUI.Ui_MainWindow):
         self.log = MyLogger(log_name='log')
         # 读配置文件
         config = configparser.ConfigParser()
+        self.comboBox.addItems(['全部', '数据库服务器', '帐号登录服务器', '引擎日志服务器', '游戏网关', '角色网关', '登录网关', '[商业版]'])
+
         if config.read('config.ini') and 'conf' in config:
             self.lineEdit_workDir.setText(config['conf'].get('工作目录') if config['conf'].get('工作目录') else '')
             self.lineEdit_workDir_2.setText(config['conf'].get('工作目录') if config['conf'].get('工作目录') else '')
@@ -110,8 +112,7 @@ class CMyMainWindow(QtWidgets.QMainWindow, MainWindowUI.Ui_MainWindow):
             '最小端口': self.lineEdit_minPort.text(),
             '最大端口': self.lineEdit_maxPort.text(),
             '合区工具': self.label_6.text(),
-            '服务器地址': self.lineEdit_server_addr.text(),
-            '注册码': self.textEdit_reg_code.toPlainText()
+            '服务器地址': self.lineEdit_server_addr.text()
         }
         if self.lineEdit_server_addr.text():
             self.thread_server.running = False
@@ -132,7 +133,7 @@ class CMyMainWindow(QtWidgets.QMainWindow, MainWindowUI.Ui_MainWindow):
         分区list = []
         if 列表文件:
             try:
-                with open(列表文件, 'r') as fp:
+                with open(列表文件, 'r', encoding='utf-8') as fp:
                     strList = fp.readlines()
                     for temStr in strList:  # 获取周循环列表
                         if '循环分区' in temStr:
@@ -259,10 +260,19 @@ class CMyMainWindow(QtWidgets.QMainWindow, MainWindowUI.Ui_MainWindow):
                     win32gui.ShowWindow(hwnd, win32con.SW_HIDE)
                 else:
                     win32gui.ShowWindow(hwnd, win32con.SW_SHOW)
-        for 窗口title in ['数据库服务器', '帐号登录服务器', '引擎日志服务器', '游戏网关', '角色网关', '登录网关', '[商业版]']:
+        list_1 = ['数据库服务器', '帐号登录服务器', '引擎日志服务器', '游戏网关', '角色网关', '登录网关', '[商业版]']
+        list_2 = ['Dbserver', 'Loginsrv', 'Logdataserver', 'Rungate', 'Selgate', 'Logingate', 'M2server']
+        if self.comboBox.currentText() == '全部':
+            窗口title_list = list_1
+            窗口title_list_ = list_2
+        else:
+            server_dict = dict(zip(list_1, list_2))
+            窗口title_list = [self.comboBox.currentText()]
+            窗口title_list_ = [server_dict[self.comboBox.currentText()]]
+        for 窗口title in 窗口title_list:
             lparam = 窗口title
             win32gui.EnumWindows(enum_child_windows, lparam)
-        for 窗口title in ['Dbserver', 'Loginsrv', 'Logdataserver', 'Rungate', 'Selgate', 'Logingate', 'M2server']:
+        for 窗口title in 窗口title_list_:
             lparam = 窗口title
             win32gui.EnumWindows(enum_child_windows, lparam)
         self.其它窗口状态 = not self.其它窗口状态

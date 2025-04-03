@@ -672,6 +672,7 @@ class UpdateServer(QtCore.QThread):
         目录 = f'{小皮目录}\\Extensions\\Nginx1.15.11\\conf\\vhosts\\'
         fileList = os.listdir(目录)
         ip_pattern = r'\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b'
+        是否更新 = False
         for filename in fileList:
             fileStr = ''
             原ip = ''
@@ -688,7 +689,9 @@ class UpdateServer(QtCore.QThread):
                     fileStr = fileStr.replace(原ip, ip)
                     fp.write(fileStr)
                 self.msg.emit(f"更新{filename}原ip {原ip}为{ip}")
-        self.kill_nginx_processes()
+                是否更新 = 是否更新 or True
+        if 是否更新:
+            self.kill_nginx_processes()
 
     async def handle(self, request):
         try:

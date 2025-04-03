@@ -34,6 +34,9 @@ class Ui_MainWindow(object):
         self.pushButton_3 = QtWidgets.QPushButton(parent=self.groupBox)
         self.pushButton_3.setGeometry(QtCore.QRect(170, 20, 75, 23))
         self.pushButton_3.setObjectName("pushButton_3")
+        self.comboBox = QtWidgets.QComboBox(parent=self.groupBox)
+        self.comboBox.setGeometry(QtCore.QRect(250, 20, 81, 22))
+        self.comboBox.setObjectName("comboBox")
         self.groupBox_5 = QtWidgets.QGroupBox(parent=self.tab)
         self.groupBox_5.setGeometry(QtCore.QRect(0, 70, 571, 141))
         self.groupBox_5.setObjectName("groupBox_5")
@@ -161,7 +164,7 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(MainWindow)
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
         self.pushButton.clicked.connect(MainWindow.slot_btn1) # type: ignore
         self.pushButton_2.clicked.connect(MainWindow.slot_btn2) # type: ignore
         self.pushButton_3.clicked.connect(MainWindow.slot_btn3) # type: ignore
@@ -177,7 +180,7 @@ class Ui_MainWindow(object):
         self.groupBox.setTitle(_translate("MainWindow", "窗口管理"))
         self.pushButton.setText(_translate("MainWindow", "引擎控制台"))
         self.pushButton_2.setText(_translate("MainWindow", "M2引擎"))
-        self.pushButton_3.setText(_translate("MainWindow", "其它窗口"))
+        self.pushButton_3.setText(_translate("MainWindow", "显隐窗口"))
         self.groupBox_5.setTitle(_translate("MainWindow", "远程服务器"))
         self.label_23.setText(_translate("MainWindow", "服务器地址"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainWindow", "引擎控制"))
