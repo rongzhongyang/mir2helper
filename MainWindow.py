@@ -150,14 +150,14 @@ class CMyMainWindow(QtWidgets.QMainWindow, MainWindowUI.Ui_MainWindow):
             '删除文件三': self.label_file_3.text(),
             '删除文件四': self.label_file_4.text()
         }
-        if self.lineEdit_server_addr.text():
-            self.thread_server.running = False
-            self.thread_up_ip_addr.running = True
-            self.thread_up_ip_addr.start()
-        else:
-            self.thread_server.running = True
-            self.thread_up_ip_addr.running = False
-            self.thread_server.start()
+        # if self.lineEdit_server_addr.text():
+        #     self.thread_server.running = False
+        #     self.thread_up_ip_addr.running = True
+        #     self.thread_up_ip_addr.start()
+        # else:
+        #     self.thread_server.running = True
+        #     self.thread_up_ip_addr.running = False
+        #     self.thread_server.start()
         with open('config.ini', 'w', encoding='gbk') as configfile:
             config.write(configfile)
 
