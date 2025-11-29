@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>602</width>
-    <height>453</height>
+    <width>618</width>
+    <height>474</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -25,12 +25,12 @@
      <rect>
       <x>10</x>
       <y>190</y>
-      <width>591</width>
-      <height>241</height>
+      <width>601</width>
+      <height>261</height>
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -41,7 +41,7 @@
        <rect>
         <x>0</x>
         <y>10</y>
-        <width>571</width>
+        <width>591</width>
         <height>51</height>
        </rect>
       </property>
@@ -103,8 +103,8 @@
        <rect>
         <x>0</x>
         <y>70</y>
-        <width>571</width>
-        <height>141</height>
+        <width>591</width>
+        <height>161</height>
        </rect>
       </property>
       <property name="title">
@@ -144,224 +144,597 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>581</width>
-        <height>211</height>
+        <width>591</width>
+        <height>231</height>
        </rect>
       </property>
       <property name="title">
        <string>合区配置</string>
       </property>
-      <widget class="QLineEdit" name="lineEdit_maxDir">
-       <property name="geometry">
-        <rect>
-         <x>400</x>
-         <y>50</y>
-         <width>171</width>
-         <height>21</height>
-        </rect>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_2">
-       <property name="geometry">
-        <rect>
-         <x>320</x>
-         <y>20</y>
-         <width>71</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>主区文件夹</string>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="lineEdit_minDir">
-       <property name="geometry">
-        <rect>
-         <x>90</x>
-         <y>50</y>
-         <width>171</width>
-         <height>21</height>
-        </rect>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="lineEdit_workDir">
-       <property name="geometry">
-        <rect>
-         <x>90</x>
-         <y>20</y>
-         <width>171</width>
-         <height>21</height>
-        </rect>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="lineEdit_mainDir">
-       <property name="geometry">
-        <rect>
-         <x>400</x>
-         <y>20</y>
-         <width>171</width>
-         <height>21</height>
-        </rect>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_3">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>50</y>
-         <width>71</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>小区文件夹</string>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_4">
-       <property name="geometry">
-        <rect>
-         <x>320</x>
-         <y>50</y>
-         <width>71</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>大区文件夹</string>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label">
+      <widget class="QTabWidget" name="tabWidget_2">
        <property name="geometry">
         <rect>
          <x>10</x>
          <y>20</y>
-         <width>71</width>
-         <height>21</height>
+         <width>581</width>
+         <height>211</height>
         </rect>
        </property>
-       <property name="layoutDirection">
-        <enum>Qt::LeftToRight</enum>
+       <property name="currentIndex">
+        <number>0</number>
        </property>
-       <property name="frameShadow">
-        <enum>QFrame::Raised</enum>
-       </property>
-       <property name="lineWidth">
-        <number>1</number>
-       </property>
-       <property name="text">
-        <string>工作目录</string>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_5">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>80</y>
-         <width>71</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>合区时间</string>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="lineEdit_workTime">
-       <property name="geometry">
-        <rect>
-         <x>90</x>
-         <y>80</y>
-         <width>171</width>
-         <height>21</height>
-        </rect>
-       </property>
-      </widget>
-      <widget class="QPushButton" name="pushButton_start">
-       <property name="geometry">
-        <rect>
-         <x>260</x>
-         <y>180</y>
-         <width>75</width>
-         <height>23</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>运行</string>
-       </property>
-      </widget>
-      <widget class="QPushButton" name="pushButton_4">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>110</y>
-         <width>81</width>
-         <height>23</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>选择合区工具</string>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_6">
-       <property name="geometry">
-        <rect>
-         <x>110</x>
-         <y>110</y>
-         <width>461</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>TextLabel</string>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_listfile">
-       <property name="geometry">
-        <rect>
-         <x>110</x>
-         <y>140</y>
-         <width>461</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>TextLabel</string>
-       </property>
-      </widget>
-      <widget class="QPushButton" name="pushButton_select_listfile">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>140</y>
-         <width>81</width>
-         <height>23</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>选择列表文件</string>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="lineEdit_thisDir">
-       <property name="geometry">
-        <rect>
-         <x>400</x>
-         <y>80</y>
-         <width>171</width>
-         <height>21</height>
-        </rect>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_7">
-       <property name="geometry">
-        <rect>
-         <x>320</x>
-         <y>80</y>
-         <width>71</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>合区文件夹</string>
-       </property>
+       <widget class="QWidget" name="tab_5">
+        <attribute name="title">
+         <string>月合区</string>
+        </attribute>
+        <widget class="QPushButton" name="pushButton_start">
+         <property name="geometry">
+          <rect>
+           <x>260</x>
+           <y>150</y>
+           <width>75</width>
+           <height>23</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>运行</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="pushButton_4">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>100</y>
+           <width>81</width>
+           <height>23</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>选择合区工具</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_5">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>70</y>
+           <width>71</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>合区时间</string>
+         </property>
+        </widget>
+        <widget class="QLineEdit" name="lineEdit_maxDir">
+         <property name="geometry">
+          <rect>
+           <x>400</x>
+           <y>40</y>
+           <width>171</width>
+           <height>21</height>
+          </rect>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_6">
+         <property name="geometry">
+          <rect>
+           <x>110</x>
+           <y>100</y>
+           <width>461</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>TextLabel</string>
+         </property>
+        </widget>
+        <widget class="QLineEdit" name="lineEdit_workDir">
+         <property name="geometry">
+          <rect>
+           <x>90</x>
+           <y>10</y>
+           <width>171</width>
+           <height>21</height>
+          </rect>
+         </property>
+        </widget>
+        <widget class="QLineEdit" name="lineEdit_minDir">
+         <property name="geometry">
+          <rect>
+           <x>90</x>
+           <y>40</y>
+           <width>171</width>
+           <height>21</height>
+          </rect>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_3">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>40</y>
+           <width>71</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>小区文件夹</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_listfile">
+         <property name="geometry">
+          <rect>
+           <x>110</x>
+           <y>130</y>
+           <width>461</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>TextLabel</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_2">
+         <property name="geometry">
+          <rect>
+           <x>320</x>
+           <y>10</y>
+           <width>71</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>主区文件夹</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>10</y>
+           <width>71</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="layoutDirection">
+          <enum>Qt::LeftToRight</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+         <property name="lineWidth">
+          <number>1</number>
+         </property>
+         <property name="text">
+          <string>工作目录</string>
+         </property>
+        </widget>
+        <widget class="QLineEdit" name="lineEdit_workTime">
+         <property name="geometry">
+          <rect>
+           <x>90</x>
+           <y>70</y>
+           <width>171</width>
+           <height>21</height>
+          </rect>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_7">
+         <property name="geometry">
+          <rect>
+           <x>320</x>
+           <y>70</y>
+           <width>71</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>合区文件夹</string>
+         </property>
+        </widget>
+        <widget class="QLineEdit" name="lineEdit_thisDir">
+         <property name="geometry">
+          <rect>
+           <x>400</x>
+           <y>70</y>
+           <width>171</width>
+           <height>21</height>
+          </rect>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_4">
+         <property name="geometry">
+          <rect>
+           <x>320</x>
+           <y>40</y>
+           <width>71</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>大区文件夹</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="pushButton_select_listfile">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>130</y>
+           <width>81</width>
+           <height>23</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>选择列表文件</string>
+         </property>
+        </widget>
+        <widget class="QLineEdit" name="lineEdit_mainDir">
+         <property name="geometry">
+          <rect>
+           <x>400</x>
+           <y>10</y>
+           <width>171</width>
+           <height>21</height>
+          </rect>
+         </property>
+        </widget>
+       </widget>
+       <widget class="QWidget" name="tab_7">
+        <attribute name="title">
+         <string>周合区</string>
+        </attribute>
+        <widget class="QLineEdit" name="lineEdit_workTime_1">
+         <property name="geometry">
+          <rect>
+           <x>90</x>
+           <y>40</y>
+           <width>171</width>
+           <height>21</height>
+          </rect>
+         </property>
+        </widget>
+        <widget class="QLineEdit" name="lineEdit_thisDir_1">
+         <property name="geometry">
+          <rect>
+           <x>400</x>
+           <y>40</y>
+           <width>171</width>
+           <height>21</height>
+          </rect>
+         </property>
+        </widget>
+        <widget class="QLineEdit" name="lineEdit_maxDir_1">
+         <property name="geometry">
+          <rect>
+           <x>400</x>
+           <y>10</y>
+           <width>171</width>
+           <height>21</height>
+          </rect>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_16">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>40</y>
+           <width>71</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>合区时间</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_17">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>10</y>
+           <width>71</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>小区文件夹</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_18">
+         <property name="geometry">
+          <rect>
+           <x>320</x>
+           <y>40</y>
+           <width>71</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>合区文件夹</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_19">
+         <property name="geometry">
+          <rect>
+           <x>320</x>
+           <y>10</y>
+           <width>71</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>大区文件夹</string>
+         </property>
+        </widget>
+        <widget class="QLineEdit" name="lineEdit_minDir_1">
+         <property name="geometry">
+          <rect>
+           <x>90</x>
+           <y>10</y>
+           <width>171</width>
+           <height>21</height>
+          </rect>
+         </property>
+        </widget>
+       </widget>
+       <widget class="QWidget" name="tab_4">
+        <attribute name="title">
+         <string>日合区</string>
+        </attribute>
+        <widget class="QLabel" name="label_12">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>40</y>
+           <width>71</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>合区时间</string>
+         </property>
+        </widget>
+        <widget class="QLineEdit" name="lineEdit_maxDir_2">
+         <property name="geometry">
+          <rect>
+           <x>400</x>
+           <y>10</y>
+           <width>171</width>
+           <height>21</height>
+          </rect>
+         </property>
+        </widget>
+        <widget class="QLineEdit" name="lineEdit_minDir_2">
+         <property name="geometry">
+          <rect>
+           <x>90</x>
+           <y>10</y>
+           <width>171</width>
+           <height>21</height>
+          </rect>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_13">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>10</y>
+           <width>71</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>小区文件夹</string>
+         </property>
+        </widget>
+        <widget class="QLineEdit" name="lineEdit_workTime_2">
+         <property name="geometry">
+          <rect>
+           <x>90</x>
+           <y>40</y>
+           <width>171</width>
+           <height>21</height>
+          </rect>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_14">
+         <property name="geometry">
+          <rect>
+           <x>320</x>
+           <y>40</y>
+           <width>71</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>合区文件夹</string>
+         </property>
+        </widget>
+        <widget class="QLineEdit" name="lineEdit_thisDir_2">
+         <property name="geometry">
+          <rect>
+           <x>400</x>
+           <y>40</y>
+           <width>171</width>
+           <height>21</height>
+          </rect>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_15">
+         <property name="geometry">
+          <rect>
+           <x>320</x>
+           <y>10</y>
+           <width>71</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>大区文件夹</string>
+         </property>
+        </widget>
+       </widget>
+       <widget class="QWidget" name="tab_6">
+        <attribute name="title">
+         <string>清理文件</string>
+        </attribute>
+        <widget class="QLabel" name="label_dir_1">
+         <property name="geometry">
+          <rect>
+           <x>110</x>
+           <y>10</y>
+           <width>461</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>TextLabel</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="pushButton_6">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>10</y>
+           <width>81</width>
+           <height>23</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>清空文件夹一</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="pushButton_7">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>40</y>
+           <width>81</width>
+           <height>23</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>清空文件夹二</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_dir_2">
+         <property name="geometry">
+          <rect>
+           <x>110</x>
+           <y>40</y>
+           <width>461</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>TextLabel</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="pushButton_8">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>70</y>
+           <width>81</width>
+           <height>23</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>清空文件一</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_file_1">
+         <property name="geometry">
+          <rect>
+           <x>110</x>
+           <y>70</y>
+           <width>461</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>TextLabel</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="pushButton_9">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>100</y>
+           <width>81</width>
+           <height>23</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>清空文件二</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_file_2">
+         <property name="geometry">
+          <rect>
+           <x>110</x>
+           <y>100</y>
+           <width>461</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>TextLabel</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="pushButton_10">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>130</y>
+           <width>81</width>
+           <height>23</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>清空文件三</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_file_3">
+         <property name="geometry">
+          <rect>
+           <x>110</x>
+           <y>130</y>
+           <width>461</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>TextLabel</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="pushButton_11">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>160</y>
+           <width>81</width>
+           <height>23</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>清空文件四</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_file_4">
+         <property name="geometry">
+          <rect>
+           <x>110</x>
+           <y>160</y>
+           <width>461</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>TextLabel</string>
+         </property>
+        </widget>
+       </widget>
       </widget>
      </widget>
     </widget>
@@ -374,7 +747,7 @@
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>571</width>
+        <width>581</width>
         <height>131</height>
        </rect>
       </property>
@@ -530,8 +903,8 @@
      <rect>
       <x>10</x>
       <y>0</y>
-      <width>591</width>
-      <height>181</height>
+      <width>601</width>
+      <height>171</height>
      </rect>
     </property>
     <property name="title">
@@ -542,7 +915,7 @@
       <rect>
        <x>10</x>
        <y>20</y>
-       <width>571</width>
+       <width>581</width>
        <height>151</height>
       </rect>
      </property>
@@ -608,8 +981,8 @@
    <slot>slot_start()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>282</x>
-     <y>397</y>
+     <x>286</x>
+     <y>430</y>
     </hint>
     <hint type="destinationlabel">
      <x>8</x>
@@ -624,8 +997,8 @@
    <slot>slot_select_file()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>76</x>
-     <y>324</y>
+     <x>80</x>
+     <y>372</y>
     </hint>
     <hint type="destinationlabel">
      <x>5</x>
@@ -640,8 +1013,8 @@
    <slot>slot_select_listfile()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>76</x>
-     <y>364</y>
+     <x>80</x>
+     <y>410</y>
     </hint>
     <hint type="destinationlabel">
      <x>0</x>
@@ -665,6 +1038,102 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>pushButton_6</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>slot_select_dir_1()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>95</x>
+     <y>276</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-2</x>
+     <y>236</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_7</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>slot_select_dir_2()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>52</x>
+     <y>309</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>4</x>
+     <y>450</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_8</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>slot_select_file_1()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>86</x>
+     <y>332</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>22</x>
+     <y>478</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_9</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>slot_select_file_2()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>102</x>
+     <y>370</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>35</x>
+     <y>482</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_10</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>slot_select_file_3()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>75</x>
+     <y>402</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>131</x>
+     <y>480</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_11</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>slot_select_file_4()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>65</x>
+     <y>426</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>314</x>
+     <y>483</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>slot_btn1()</slot>
@@ -675,5 +1144,11 @@
   <slot>slot_select_listfile()</slot>
   <slot>slot_clone()</slot>
   <slot>slot_check_reg()</slot>
+  <slot>slot_select_dir_1()</slot>
+  <slot>slot_select_dir_2()</slot>
+  <slot>slot_select_file_1()</slot>
+  <slot>slot_select_file_2()</slot>
+  <slot>slot_select_file_3()</slot>
+  <slot>slot_select_file_4()</slot>
  </slots>
 </ui>

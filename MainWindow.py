@@ -46,15 +46,31 @@ class CMyMainWindow(QtWidgets.QMainWindow, MainWindowUI.Ui_MainWindow):
             self.lineEdit_workDir_2.setText(config['conf'].get('工作目录') if config['conf'].get('工作目录') else '')
             self.lineEdit_mainDir.setText(config['conf'].get('主区文件夹') if config['conf'].get('主区文件夹') else '')
             self.lineEdit_mainDir_2.setText(config['conf'].get('主区文件夹') if config['conf'].get('主区文件夹') else '')
-            self.lineEdit_minDir.setText(config['conf'].get('小区文件夹') if config['conf'].get('小区文件夹') else '')
-            self.lineEdit_maxDir.setText(config['conf'].get('大区文件夹') if config['conf'].get('大区文件夹') else '')
-            self.lineEdit_workTime.setText(config['conf'].get('合区时间') if config['conf'].get('合区时间') else '')
+            self.lineEdit_minDir.setText(config['conf'].get('小区文件夹_月') if config['conf'].get('小区文件夹_月') else '')
+            self.lineEdit_maxDir.setText(config['conf'].get('大区文件夹_月') if config['conf'].get('大区文件夹_月') else '')
+            self.lineEdit_workTime.setText(config['conf'].get('合区时间_月') if config['conf'].get('合区时间_月') else '')
+            self.lineEdit_minDir_1.setText(config['conf'].get('小区文件夹_周') if config['conf'].get('小区文件夹_周') else '')
+            self.lineEdit_maxDir_1.setText(config['conf'].get('大区文件夹_周') if config['conf'].get('大区文件夹_周') else '')
+            self.lineEdit_workTime_1.setText(config['conf'].get('合区时间_周') if config['conf'].get('合区时间_周') else '')
+            self.lineEdit_minDir_2.setText(config['conf'].get('小区文件夹_日') if config['conf'].get('小区文件夹_日') else '')
+            self.lineEdit_maxDir_2.setText(config['conf'].get('大区文件夹_日') if config['conf'].get('大区文件夹_日') else '')
+            self.lineEdit_workTime_2.setText(config['conf'].get('合区时间_日') if config['conf'].get('合区时间_日') else '')
             self.lineEdit_minPort.setText(config['conf'].get('最小端口') if config['conf'].get('最小端口') else '')
             self.lineEdit_maxPort.setText(config['conf'].get('最大端口') if config['conf'].get('最大端口') else '')
             self.label_6.setText(config['conf'].get('合区工具') if config['conf'].get('合区工具') else '')
             self.label_listfile.setText(config['conf'].get('列表文件') if config['conf'].get('列表文件') else '')
             self.lineEdit_server_addr.setText(config['conf'].get('服务器地址') if config['conf'].get('服务器地址') else '')
-            self.getthisDir()
+
+            self.label_dir_1.setText(config['conf'].get('清空文件夹一') if config['conf'].get('清空文件夹一') else '')
+            self.label_dir_2.setText(config['conf'].get('清空文件夹二') if config['conf'].get('清空文件夹二') else '')
+            self.label_file_1.setText(config['conf'].get('删除文件一') if config['conf'].get('删除文件一') else '')
+            self.label_file_2.setText(config['conf'].get('删除文件二') if config['conf'].get('删除文件二') else '')
+            self.label_file_3.setText(config['conf'].get('删除文件三') if config['conf'].get('删除文件三') else '')
+            self.label_file_4.setText(config['conf'].get('删除文件四') if config['conf'].get('删除文件四') else '')
+
+            self.getthisDir(合区类型='月')
+            self.getthisDir(合区类型='周')
+            self.getthisDir(合区类型='日')
         # 禁用窗口最大化按钮
         self.setWindowTitle(f"航界软件-传奇助手 1.0.0 【{self.lineEdit_mainDir.text().rsplit('_', 1)[0]}】")
         self.setWindowIcon(QIcon(get_icon()))
@@ -83,7 +99,13 @@ class CMyMainWindow(QtWidgets.QMainWindow, MainWindowUI.Ui_MainWindow):
         self.lineEdit_server_addr.focusOutEvent = self.on_focus_out
         self.pushButton_4.focusOutEvent = self.on_focus_out
         self.pushButton_select_listfile.focusOutEvent = self.on_focus_out
-        self.begin()
+        self.pushButton_6.focusOutEvent = self.on_focus_out = self.on_focus_out
+        self.pushButton_7.focusOutEvent = self.on_focus_out = self.on_focus_out
+        self.pushButton_8.focusOutEvent = self.on_focus_out = self.on_focus_out
+        self.pushButton_9.focusOutEvent = self.on_focus_out = self.on_focus_out
+        self.pushButton_10.focusOutEvent = self.on_focus_out = self.on_focus_out
+        self.pushButton_11.focusOutEvent = self.on_focus_out = self.on_focus_out
+        #self.begin() # 禁用 ip 更新
 
     def begin(self):
         server_addr = self.lineEdit_server_addr.text()
@@ -104,15 +126,29 @@ class CMyMainWindow(QtWidgets.QMainWindow, MainWindowUI.Ui_MainWindow):
         config['conf'] = {
             '工作目录': self.lineEdit_workDir.text(),
             '主区文件夹': self.lineEdit_mainDir.text(),
-            '小区文件夹': self.lineEdit_minDir.text(),
-            '大区文件夹': self.lineEdit_maxDir.text(),
-            '合区文件夹': self.lineEdit_thisDir.text(),
-            '合区时间': self.lineEdit_workTime.text(),
+            '小区文件夹_月': self.lineEdit_minDir.text(),
+            '大区文件夹_月': self.lineEdit_maxDir.text(),
+            '合区文件夹_月': self.lineEdit_thisDir.text(),
+            '合区时间_月': self.lineEdit_workTime.text(),
+            '小区文件夹_周': self.lineEdit_minDir_1.text(),
+            '大区文件夹_周': self.lineEdit_maxDir_1.text(),
+            '合区文件夹_周': self.lineEdit_thisDir_1.text(),
+            '合区时间_周': self.lineEdit_workTime_1.text(),
+            '小区文件夹_日': self.lineEdit_minDir_2.text(),
+            '大区文件夹_日': self.lineEdit_maxDir_2.text(),
+            '合区文件夹_日': self.lineEdit_thisDir_2.text(),
+            '合区时间_日': self.lineEdit_workTime_2.text(),
             '列表文件': self.label_listfile.text(),
             '最小端口': self.lineEdit_minPort.text(),
             '最大端口': self.lineEdit_maxPort.text(),
             '合区工具': self.label_6.text(),
-            '服务器地址': self.lineEdit_server_addr.text()
+            '服务器地址': self.lineEdit_server_addr.text(),
+            '清空文件夹一': self.label_dir_1.text(),
+            '清空文件夹二': self.label_dir_2.text(),
+            '删除文件一': self.label_file_1.text(),
+            '删除文件二': self.label_file_2.text(),
+            '删除文件三': self.label_file_3.text(),
+            '删除文件四': self.label_file_4.text()
         }
         if self.lineEdit_server_addr.text():
             self.thread_server.running = False
@@ -128,27 +164,39 @@ class CMyMainWindow(QtWidgets.QMainWindow, MainWindowUI.Ui_MainWindow):
     def focusOutEvent(self, event):
         super().focusOutEvent(event)  # 调用父类的 focusOutEvent
 
-    def getthisDir(self):
+    def getthisDir(self, 合区类型: str):
         列表文件 = self.label_listfile.text()
         分区list = []
         if 列表文件:
             try:
-                with open(列表文件, 'r', encoding='utf-8') as fp:
+                with open(列表文件, 'r', encoding='gbk') as fp:
                     strList = fp.readlines()
                     for temStr in strList:  # 获取周循环列表
-                        if '循环分区' in temStr:
+                        if f'{合区类型}循环分区' in temStr:
                             分区list.append(temStr)
             except:
-                self.lineEdit_thisDir.setText('列表文件不存在')
+                try:
+                    with open(列表文件, 'r', encoding='utf-8') as fp:
+                        strList = fp.readlines()
+                        for temStr in strList:  # 获取周循环列表
+                            if f'{合区类型}循环分区' in temStr:
+                                分区list.append(temStr)
+                except:
+                    ...
                 return
             if len(分区list) < 1:
-                self.lineEdit_thisDir.setText('列表文件中没有可合的分区')
                 return
             端口 = 7000 + int(分区list[-1].split('|70')[1][:2])
             合区目录 = self.lineEdit_mainDir.text().rsplit('_', 1)[0] + '_' + str(端口)
-            self.lineEdit_thisDir.setText(合区目录)
+            if 合区类型 == '月':
+                self.lineEdit_thisDir.setText(合区目录)
+            if 合区类型 == '周':
+                self.lineEdit_thisDir_1.setText(合区目录)
+            if 合区类型 == '日':
+                self.lineEdit_thisDir_2.setText(合区目录)
         else:
             self.lineEdit_thisDir.text('先设置列表文件')
+            self.lineEdit_thisDir_2.text('先设置列表文件')
 
     def enum_windows_find(self, hwnd, lparam):
         '''依据窗口标题 和窗口类名称 查询窗口'''
@@ -185,15 +233,36 @@ class CMyMainWindow(QtWidgets.QMainWindow, MainWindowUI.Ui_MainWindow):
             except:
                 subprocess.Popen(
                     self.lineEdit_workDir.text() + '\\' + self.lineEdit_mainDir.text() + '\\GameCenter.exe', creationflags=subprocess.DETACHED_PROCESS)
-            最小端口 = int(self.lineEdit_minDir.text().rsplit('_', 1)[1])
-            最大端口 = int(self.lineEdit_maxDir.text().rsplit('_', 1)[1])
-            for i in range(最小端口, 最大端口 + 1):
-                try:
-                    subprocess.Popen(self.lineEdit_workDir.text() + '\\' + self.lineEdit_minDir.text().replace(f'{最小端口}', str(i)) + '\\GameOfMir引擎控制器.exe', creationflags=subprocess.DETACHED_PROCESS)
-                except:
-                    subprocess.Popen(
-                        self.lineEdit_workDir.text() + '\\' + self.lineEdit_minDir.text().replace(f'{最小端口}',
+            最小端口_月 = int(self.lineEdit_minDir.text().rsplit('_', 1)[1]) if self.lineEdit_minDir.text() else None
+            最大端口_月 = int(self.lineEdit_maxDir.text().rsplit('_', 1)[1]) if self.lineEdit_minDir.text() else None
+            最小端口_周 = int(self.lineEdit_minDir_1.text().rsplit('_', 1)[1]) if self.lineEdit_minDir_1.text() else None
+            最大端口_周 = int(self.lineEdit_maxDir_1.text().rsplit('_', 1)[1]) if self.lineEdit_minDir_1.text() else None
+            最小端口_日 = int(self.lineEdit_minDir_2.text().rsplit('_', 1)[1]) if self.lineEdit_minDir_2.text() else None
+            最大端口_日 = int(self.lineEdit_maxDir_2.text().rsplit('_', 1)[1]) if self.lineEdit_minDir_2.text() else None
+            if 最小端口_月 and 最大端口_月:
+                for i in range(最小端口_月, 最大端口_月 + 1):
+                    try:
+                        subprocess.Popen(self.lineEdit_workDir.text() + '\\' + self.lineEdit_minDir.text().replace(f'{最小端口_月}', str(i)) + '\\GameOfMir引擎控制器.exe', creationflags=subprocess.DETACHED_PROCESS)
+                    except:
+                        subprocess.Popen(
+                            self.lineEdit_workDir.text() + '\\' + self.lineEdit_minDir.text().replace(f'{最小端口_月}',
                                                                                                   str(i)) + '\\GameCenter.exe', creationflags=subprocess.DETACHED_PROCESS)
+            if 最小端口_周 and 最大端口_周:
+                for i in range(最小端口_周, 最大端口_周 + 1):
+                    try:
+                        subprocess.Popen(self.lineEdit_workDir.text() + '\\' + self.lineEdit_minDir_1.text().replace(f'{最小端口_周}', str(i)) + '\\GameOfMir引擎控制器.exe', creationflags=subprocess.DETACHED_PROCESS)
+                    except:
+                        subprocess.Popen(
+                            self.lineEdit_workDir.text() + '\\' + self.lineEdit_minDir_1.text().replace(f'{最小端口_周}',
+                                                                                                  str(i)) + '\\GameCenter.exe', creationflags=subprocess.DETACHED_PROCESS)
+            if 最小端口_日 and 最大端口_日:
+                for i in range(最小端口_日, 最大端口_日 + 1):
+                    try:
+                        subprocess.Popen(self.lineEdit_workDir_2.text() + '\\' + self.lineEdit_minDir_2.text().replace(f'{最小端口_日}', str(i)) + '\\GameOfMir引擎控制器.exe', creationflags=subprocess.DETACHED_PROCESS)
+                    except:
+                        subprocess.Popen(
+                            self.lineEdit_workDir_2.text() + '\\' + self.lineEdit_minDir_2.text().replace(f'{最小端口_日}',
+                                                                                                      str(i)) + '\\GameCenter.exe', creationflags=subprocess.DETACHED_PROCESS)
             self.引擎控制台状态 = not self.引擎控制台状态
         if self.引擎控制台状态:
             for index, 引擎控制台 in enumerate(引擎控制台列表):
@@ -287,6 +356,14 @@ class CMyMainWindow(QtWidgets.QMainWindow, MainWindowUI.Ui_MainWindow):
             self.lineEdit_maxDir.setDisabled(False)
             self.lineEdit_thisDir.setDisabled(False)
             self.lineEdit_workTime.setDisabled(False)
+            self.lineEdit_minDir_1.setDisabled(False)
+            self.lineEdit_maxDir_1.setDisabled(False)
+            self.lineEdit_thisDir_1.setDisabled(False)
+            self.lineEdit_workTime_1.setDisabled(False)
+            self.lineEdit_minDir_2.setDisabled(False)
+            self.lineEdit_maxDir_2.setDisabled(False)
+            self.lineEdit_thisDir_2.setDisabled(False)
+            self.lineEdit_workTime_2.setDisabled(False)
             self.pushButton_4.setDisabled(False)
             self.pushButton_select_listfile.setDisabled(False)
             self.开合区状态 = not self.开合区状态
@@ -299,19 +376,41 @@ class CMyMainWindow(QtWidgets.QMainWindow, MainWindowUI.Ui_MainWindow):
             self.lineEdit_maxDir.setDisabled(True)
             self.lineEdit_thisDir.setDisabled(True)
             self.lineEdit_workTime.setDisabled(True)
+            self.lineEdit_minDir_1.setDisabled(True)
+            self.lineEdit_maxDir_1.setDisabled(True)
+            self.lineEdit_thisDir_1.setDisabled(True)
+            self.lineEdit_workTime_1.setDisabled(True)
+            self.lineEdit_minDir_2.setDisabled(True)
+            self.lineEdit_maxDir_2.setDisabled(True)
+            self.lineEdit_thisDir_2.setDisabled(True)
+            self.lineEdit_workTime_2.setDisabled(True)
             self.pushButton_4.setDisabled(True)
             self.pushButton_select_listfile.setDisabled(True)
             self.开合区状态 = not self.开合区状态
             # 创建子线程和 Worker 对象
             self.thread = SubWorkerThread({
                 '工作目录': self.lineEdit_workDir.text(),
-                '主区文件夹': self.lineEdit_mainDir.text(),
-                '小区文件夹': self.lineEdit_minDir.text(),
-                '大区文件夹': self.lineEdit_maxDir.text(),
-                '合区文件夹': self.lineEdit_thisDir.text(),
-                '合区时间': self.lineEdit_workTime.text(),
+                '主区文件夹_月': self.lineEdit_mainDir.text(),
+                '小区文件夹_月': self.lineEdit_minDir.text(),
+                '大区文件夹_月': self.lineEdit_maxDir.text(),
+                '合区文件夹_月': self.lineEdit_thisDir.text(),
+                '合区时间_月': self.lineEdit_workTime.text(),
+                '小区文件夹_周': self.lineEdit_minDir_1.text(),
+                '大区文件夹_周': self.lineEdit_maxDir_1.text(),
+                '合区文件夹_周': self.lineEdit_thisDir_1.text(),
+                '合区时间_周': self.lineEdit_workTime_1.text(),
+                '小区文件夹_日': self.lineEdit_minDir_2.text(),
+                '大区文件夹_日': self.lineEdit_maxDir_2.text(),
+                '合区文件夹_日': self.lineEdit_thisDir_2.text(),
+                '合区时间_日': self.lineEdit_workTime_2.text(),
                 '列表文件': self.label_listfile.text(),
-                '合区工具': self.label_6.text()
+                '合区工具': self.label_6.text(),
+                '清空文件夹一': self.label_dir_1.text(),
+                '清空文件夹二': self.label_dir_2.text(),
+                '删除文件一': self.label_file_1.text(),
+                '删除文件二': self.label_file_2.text(),
+                '删除文件三': self.label_file_3.text(),
+                '删除文件四': self.label_file_4.text()
                                            })
             self.thread.msg.connect(self.updateMsg)
             self.thread.start()
@@ -323,7 +422,9 @@ class CMyMainWindow(QtWidgets.QMainWindow, MainWindowUI.Ui_MainWindow):
             msg = f'<span style="color: green;">{thistime}：</span><span style="color: blue;">{msg}</span>'
             self.textBrowser_log.append(msg)
         else:
-            self.getthisDir()
+            self.getthisDir(合区类型='月')
+            self.getthisDir(合区类型='周')
+            self.getthisDir(合区类型='日')
 
     def slot_select_file(self):
         # 打开文件选择对话框
@@ -336,7 +437,8 @@ class CMyMainWindow(QtWidgets.QMainWindow, MainWindowUI.Ui_MainWindow):
         file_name, _ = QtWidgets.QFileDialog.getOpenFileName(self, '选择文件', '', '所有文件 (*);;文本文件 (*.txt)')
         if file_name:
             self.label_listfile.setText(f'{file_name}')
-            self.getthisDir()
+            self.getthisDir(合区类型='周')
+            self.getthisDir(合区类型='日')
 
     def toggle_ui(self, enabled):
         """ 启用/禁用 UI 控件 """
@@ -368,3 +470,38 @@ class CMyMainWindow(QtWidgets.QMainWindow, MainWindowUI.Ui_MainWindow):
             self.hide()
         except:
             pass
+
+
+    def slot_select_dir_1(self):
+        folder_path = QtWidgets.QFileDialog.getExistingDirectory(self, '选择文件夹', '')
+        if folder_path:
+            if 'Mir200' in folder_path:
+                folder_path = folder_path.split('Mir200')[1]
+            self.label_dir_1.setText(f'{folder_path}')
+
+    def slot_select_dir_2(self):
+        ...
+
+    def slot_select_file_1(self):
+        file_name, _ = QtWidgets.QFileDialog.getOpenFileName(self, '选择文件', '', '所有文件 (*);;文本文件 (*.txt)')
+        if file_name:
+            file_name = file_name.split('Mir200')[1]
+            self.label_file_1.setText(f'{file_name}')
+
+    def slot_select_file_2(self):
+        file_name, _ = QtWidgets.QFileDialog.getOpenFileName(self, '选择文件', '', '所有文件 (*);;文本文件 (*.txt)')
+        if file_name:
+            file_name = file_name.split('Mir200')[1]
+            self.label_file_2.setText(f'{file_name}')
+
+    def slot_select_file_3(self):
+        file_name, _ = QtWidgets.QFileDialog.getOpenFileName(self, '选择文件', '', '所有文件 (*);;文本文件 (*.txt)')
+        if file_name:
+            file_name = file_name.split('Mir200')[1]
+            self.label_file_3.setText(f'{file_name}')
+
+    def slot_select_file_4(self):
+        file_name, _ = QtWidgets.QFileDialog.getOpenFileName(self, '选择文件', '', '所有文件 (*);;文本文件 (*.txt)')
+        if file_name:
+            file_name = file_name.split('Mir200')[1]
+            self.label_file_4.setText(f'{file_name}')

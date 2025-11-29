@@ -8,8 +8,33 @@ import configparser
 import win32process
 import psutil  # 用于获取进程信息
 from aiohttp import web
+import sqlite3
 
 
+def update_constant_value(db_path_src, db_path_dsc):
+    conn = sqlite3.connect(db_path_src)
+    cursor = conn.cursor()
+    sql_str = f"select ConstValue from db_constant where ConstName = 'version'"
+    cursor.execute(sql_str)
+    result = cursor.fetchone()[0]
+    conn.close()
+
+    conn = sqlite3.connect(db_path_dsc)
+    cursor = conn.cursor()
+    sql_str = rf"update db_constant set ConstValue = {result} where ConstName = 'version'"
+    cursor.execute(sql_str)
+    conn.commit()
+    conn.close()
+
+
+def get_all_files(directory):
+    all_files = []
+    for root, dirs, files in os.walk(directory):
+        for file in files:
+            # 获取文件的完整路径
+            full_path = os.path.join(root, file)
+            all_files.append(full_path)
+    return all_files
 
 class SubWorkerThread(QtCore.QThread):
 
@@ -104,18 +129,18 @@ class SubWorkerThread(QtCore.QThread):
 
     def 停止服务器(self, 文件夹名):
         引擎控制台窗口句柄 = self.获取引擎控制台窗口句柄(文件夹名)
-        停止服务器按键句柄 = self.查找子窗口句柄(引擎控制台窗口句柄, '停止游戏服务器(&T)')
+        停止服务器按键句柄 = self.查找子窗口句柄(引擎控制台窗口句柄, '停止游戏')
         if 停止服务器按键句柄:
             self.鼠标点击(停止服务器按键句柄)
             self.点击确认信息()
         self.msg.emit(f'{文件夹名} 停止中...')
-        while not self.查找子窗口句柄(引擎控制台窗口句柄, '启动游戏服务器(&S)'):
+        while not self.查找子窗口句柄(引擎控制台窗口句柄, '启动游戏'):
             time.sleep(0.5)
         self.msg.emit(f'{文件夹名} 停止完成')
 
     def 启动服务器(self, 文件夹名):
         引擎控制台窗口句柄 = self.获取引擎控制台窗口句柄(文件夹名)
-        启动服务器按键句柄 = self.查找子窗口句柄(引擎控制台窗口句柄, '启动游戏服务器(&S)')
+        启动服务器按键句柄 = self.查找子窗口句柄(引擎控制台窗口句柄, '启动游戏')
         if 启动服务器按键句柄:
             self.鼠标点击(启动服务器按键句柄)
             self.点击确认信息()
@@ -134,9 +159,37 @@ class SubWorkerThread(QtCore.QThread):
         self.鼠标点击(开始清理按键句柄)
         self.点击确认信息()
         self.点击提示信息()
+        if self.data['清空文件夹一']:
+            dir_path = f"{self.data['工作目录']}\\{文件夹名}\\Mir200\\{self.data['清空文件夹一']}"
+            for filename in os.listdir(dir_path):
+                file_path = os.path.join(dir_path, filename)
+                if os.path.isfile(file_path):
+                    os.remove(file_path)
+        if self.data['清空文件夹一']:
+            dir_path = f"{self.data['工作目录']}\\{文件夹名}\\Mir200\\{self.data['清空文件夹一']}"
+            for filename in os.listdir(dir_path):
+                file_path = os.path.join(dir_path, filename)
+                if os.path.isfile(file_path):
+                    os.remove(file_path)
+        if self.data['删除文件一']:
+            file_path = f"{self.data['工作目录']}\\{文件夹名}\\Mir200\\{self.data['删除文件一']}"
+            with open(file_path, 'w') as f:
+                f.write("")
+        if self.data['删除文件二']:
+            file_path = f"{self.data['工作目录']}\\{文件夹名}\\Mir200\\{self.data['删除文件二']}"
+            with open(file_path, 'w') as f:
+                f.write("")
+        if self.data['删除文件三']:
+            file_path = f"{self.data['工作目录']}\\{文件夹名}\\Mir200\\{self.data['删除文件三']}"
+            with open(file_path, 'w') as f:
+                f.write("")
+        if self.data['删除文件四']:
+            file_path = f"{self.data['工作目录']}\\{文件夹名}\\Mir200\\{self.data['删除文件四']}"
+            with open(file_path, 'w') as f:
+                f.write("")
         self.msg.emit(f'{文件夹名} 数据清理完成')
 
-    def 更新列表(self):
+    def 更新列表(self, 合区类型: str):
         filePath = self.data['列表文件']
         writeStrList = []
         with open(filePath, 'r') as f_open:
@@ -146,16 +199,21 @@ class SubWorkerThread(QtCore.QThread):
             week = time.strftime('%W{}', time.localtime()).format('周')
             循环列表 = []
             for temStr in strList:  # 获取周循环列表
-                if '循环分区' in temStr:
+                if f'{合区类型}循环分区' in temStr:
                     循环列表.append(temStr)
             循环列表 = 循环列表[-1:] + 循环列表[:-1]  # 周列表循环
             新列表 = []
-            循环列表[0] = 循环列表[0][0:循环列表[0].find('【') + 1] + day + 循环列表[0][循环列表[0].find('】'):]
-            循环列表[0] = 循环列表[0].replace('】', '】刚开一秒')  # 添加新区刚开一秒标签
-            循环列表[1] = 循环列表[1].replace('】刚开一秒', '】')  # 去除昨天刚开一秒标签
+            if 合区类型 == '日':
+                循环列表[0] = 循环列表[0][0:循环列表[0].find('【') + 1] + day + 循环列表[0][循环列表[0].find('】'):]
+                循环列表[0] = 循环列表[0].replace('】', '】刚开一秒')  # 添加新区刚开一秒标签
+                循环列表[1] = 循环列表[1].replace('】刚开一秒', '】')  # 去除昨天刚开一秒标签
+            if 合区类型 == '周':
+                循环列表[0] = 循环列表[0][0:循环列表[0].find('【') + 1] + day + 循环列表[0][循环列表[0].find('】'):]
+            if 合区类型 == '月':
+                循环列表[0] = 循环列表[0][0:循环列表[0].find('【') + 1] + moth + 循环列表[0][循环列表[0].find('】'):]
             i = 0
             for temStr in strList:
-                if '分区' in temStr:
+                if f'{合区类型}循环分区' in temStr:
                     新列表.append(循环列表[i])
                     i = i + 1
                 else:
@@ -172,6 +230,14 @@ class SubWorkerThread(QtCore.QThread):
         主备 = self.data['工作目录'] + f'\\{主区目录}\\'
         合备 = self.data['工作目录'] + f'\\{合区目录}\\'
         try:
+            主数据库路径 = 主备 + 'Mir200\\M2Date\\ApexM2Data.DB'
+            合数据库路径 = 合备 + 'Mir200\\M2Date\\ApexM2Data.DB'
+            # 修改数据库里的版本号
+            update_constant_value(主数据库路径, 合数据库路径)
+            self.msg.emit(f'数据库版本修改成功')
+        except Exception:
+            self.msg.emit(f'数据库版本修改失败')
+        try:
             subprocess.run(["xcopy", f'{主备}LoginSrv\\IDDB', f'{bak}\\{主区目录}\\LoginSrv\\IDDB', "/E", "/I", "/Y"])
             subprocess.run(["xcopy", f'{合备}LoginSrv\\IDDB', f'{bak}\\{合区目录}\\LoginSrv\\IDDB', "/E", "/I", "/Y"])
             subprocess.run(["xcopy", f'{主备}DBServer\\FDB', f'{bak}\\{主区目录}\\DBServer\\FDB', "/E", "/I", "/Y"])
@@ -184,6 +250,11 @@ class SubWorkerThread(QtCore.QThread):
             subprocess.run(["xcopy", f'{合备}Mir200\\Envir\\MasterNo', f'{bak}\\{合区目录}\\Mir200\\Envir\\MasterNo', "/E", "/I", "/Y"])
             subprocess.run(["xcopy", f'{主备}Mir200\\Envir\\Nations', f'{bak}\\{主区目录}\\Mir200\\Envir\\Nations', "/E", "/I", "/Y"])
             subprocess.run(["xcopy", f'{合备}Mir200\\Envir\\Nations', f'{bak}\\{合区目录}\\Mir200\\Envir\\Nations', "/E", "/I", "/Y"])
+
+            subprocess.run(["xcopy", f'{合备}Mud2\\DB', f'{bak}\\{合区目录}\\Mud2\\DB', "/E", "/I", "/Y"])
+            subprocess.run(["xcopy", f'{合备}Mud2\\DB', f'{bak}\\{主区目录}\\Mud2\\DB', "/E", "/I", "/Y"])
+            subprocess.run(["xcopy", f'{合备}Mir200\\!Setup.txt', f'{bak}\\{合区目录}\\Mir200\\', "/Y"])
+            subprocess.run(["xcopy", f'{合备}Mir200\\!Setup.txt', f'{bak}\\{主区目录}\\Mir200\\', "/Y"])
             self.msg.emit(f'备份数据成功')
         except:
             self.msg.emit(f'备份数据失败')
@@ -318,33 +389,75 @@ class SubWorkerThread(QtCore.QThread):
 
         self.msg.emit(f'{合区目录} 合并到 {主区目录} 完成')
 
-    def 获取合区目录(self):
+    def 获取合区目录(self, 合区类型: str ):
         列表文件 = self.data['列表文件']
         分区list = []
         if 列表文件:
-            with open(列表文件, 'r') as fp:
-                strList = fp.readlines()
-                for temStr in strList:  # 获取周循环列表
-                    if '循环分区' in temStr:
-                        分区list.append(temStr)
+            try:
+                with open(列表文件, 'r', encoding='gbk') as fp:
+                    strList = fp.readlines()
+                    for temStr in strList:  # 获取周循环列表
+                        if f'{合区类型}循环分区' in temStr:
+                            分区list.append(temStr)
+            except:
+                try:
+                    with open(列表文件, 'r', encoding='utf-8') as fp:
+                        strList = fp.readlines()
+                        for temStr in strList:  # 获取周循环列表
+                            if f'{合区类型}循环分区'  in temStr:
+                                分区list.append(temStr)
+                except:
+                    self.msg.emit('读取列表文件出错')
             if not len(分区list):
-                self.msg.emit(f'【循环分区】标签是否存完成？')
+                self.msg.emit(f'【{合区类型}循环分区】标签是否存完成？')
                 return False
             端口 = 7000 + int(分区list[-1].split('|70')[1][:2])
-            合区目录 = self.data['主区文件夹'].rsplit('_', 1)[0] + '_' + str(端口)
+            合区目录 = self.data[f'合区文件夹_{合区类型}'].rsplit('_', 1)[0] + '_' + str(端口)
         return 合区目录
 
-    def 开始合区(self):
+    def 获取主区目录(self, 合区类型: str ):
+        列表文件 = self.data['列表文件']
+        分区list = []
+        if 列表文件:
+            try:
+                with open(列表文件, 'r', encoding='gbk') as fp:
+                    strList = fp.readlines()
+                    for temStr in strList:  # 获取周循环列表
+                        if f'{合区类型}循环分区' in temStr:
+                            分区list.append(temStr)
+            except:
+                try:
+                    with open(列表文件, 'r', encoding='utf-8') as fp:
+                        strList = fp.readlines()
+                        for temStr in strList:  # 获取周循环列表
+                            if f'{合区类型}循环分区'  in temStr:
+                                分区list.append(temStr)
+                except:
+                    self.msg.emit('读取列表文件出错')
+            if not len(分区list):
+                self.msg.emit(f'【{合区类型}循环分区】标签是否存完成？')
+                return False
+            端口 = 7000 + int(分区list[0].split('|70')[1][:2])
+            合区目录 = self.data[f'主区文件夹_{合区类型}'].rsplit('_', 1)[0] + '_' + str(端口)
+        return 合区目录
+
+
+    def 开始合区(self, 合区类型: str ):
         config = configparser.ConfigParser()
         config.read('config.ini')
-        主区目录 = config['conf']['主区文件夹']
-        合区目录 = self.获取合区目录()
-        if 合区目录 == config['conf']['大区文件夹']:  # 如果碰到最大区名，开始循环
-            下次合区目录 = config['conf']['大区文件夹']
+        if 合区类型 == '月':
+            主区目录 = config['conf'][f'主区文件夹']
+        if 合区类型 == '周':
+            主区目录 = self.获取主区目录(合区类型='月')
+        if 合区类型 == '日':
+            主区目录 = self.获取主区目录(合区类型='周')
+        合区目录 = self.获取合区目录(合区类型=合区类型)
+        if 合区目录 == config['conf'][f'大区文件夹_{合区类型}']:  # 如果碰到最大区名，开始循环
+            下次合区目录 = config['conf'][f'大区文件夹_{合区类型}']
         else:
             目录信息列表 = 合区目录.split('_')
             下次合区目录 = 目录信息列表[0] + "_" + 目录信息列表[1] + "_" + str(int(目录信息列表[2]) + 1)
-        config.set("conf", "合区文件夹", 下次合区目录)
+        config.set("conf", f"合区文件夹_{合区类型}", 下次合区目录)
         with open('config.ini', 'w', encoding='gbk') as configfile:
             config.write(configfile)
         self.停止服务器(主区目录)
@@ -353,7 +466,7 @@ class SubWorkerThread(QtCore.QThread):
         self.清理数据(合区目录)
         self.启动服务器(主区目录)
         self.启动服务器(合区目录)
-        self.更新列表()
+        self.更新列表(合区类型=合区类型)
 
     def run(self):
         self.msg.emit('开合区任务线程启动...')
@@ -361,9 +474,17 @@ class SubWorkerThread(QtCore.QThread):
             现在时间 = time.strftime("%H:%M:%S", time.localtime())
             现在日期 = time.strftime('%d{}', time.localtime()).format('日')
             现在星期 = time.strftime("%w{}", time.localtime()).format('周')
-            if self.data['合区时间'] in 现在星期+现在时间:
-                self.msg.emit('开始运行合区任务')
-                self.开始合区()
+            if self.data['合区时间_月'] == 现在日期+现在时间:
+                self.msg.emit('开始运行周合区任务')
+                self.开始合区(合区类型='月')
+                time.sleep(1)
+            if self.data['合区时间_周'] == 现在星期+现在时间:
+                self.msg.emit('开始运行周合区任务')
+                self.开始合区(合区类型='周')
+                time.sleep(1)
+            if self.data['合区时间_日'] == 现在时间:
+                self.msg.emit('开始运行日合区任务')
+                self.开始合区(合区类型='日')
                 time.sleep(1)
             time.sleep(0.5)
         self.msg.emit('开合区任务线程结')
@@ -592,7 +713,10 @@ class Updateipaddr(QtCore.QThread):
                 if "固定主区" in line:
                     lastip = line.split('|')[3]
         if ip and ip != lastip:
-            requests.get(f'http://{self.serverAddr}:30088/updateipaddr/{ip}')
+            try:
+                requests.get(f'http://{self.serverAddr}:30088/updateipaddr/{ip}')
+            except:
+                self.msg.emit(f"请求远程服务器失败，请检查服务器地址和端口")
             with open(self.listFile, 'r+') as fp:
                 fileStr = fp.read()
                 fileStr = fileStr.replace(lastip, ip)
@@ -617,7 +741,7 @@ class Updateipaddr(QtCore.QThread):
         """ 停止线程 """
         self.running = False  # 修改标志位，让线程退出
 
-
+# 当是动态ip时。更新本地列表的ip. 有了wireguard后。就不用了
 class UpdateServer(QtCore.QThread):
     msg = QtCore.pyqtSignal(str)
 
@@ -668,16 +792,16 @@ class UpdateServer(QtCore.QThread):
 
     def ip检查(self, ip):
         self.msg.emit(f'接收到ip更新通知 {ip}')
-        小皮目录 = f'D:\\phpstudy_pro'
-        目录 = f'{小皮目录}\\Extensions\\Nginx1.15.11\\conf\\vhosts\\'
-        fileList = os.listdir(目录)
+        目录 = r'C:\phpstudy_pro\Extensions\Nginx1.15.11\conf'
+        fileList = get_all_files(目录)
         ip_pattern = r'\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b'
         是否更新 = False
         for filename in fileList:
             fileStr = ''
             原ip = ''
+            文件名 = filename.rsplit('\\', 1)[1]
             if '.conf' in filename:
-                with open(f'{目录}{filename}', 'r') as fp:
+                with open(filename, 'r') as fp:
                     lines = fp.readlines()
                     fileStr = ''.join(lines)
                     for line in lines:
@@ -685,10 +809,10 @@ class UpdateServer(QtCore.QThread):
                             match = re.search(ip_pattern, line)
                             原ip = match.group(0)
             if 原ip and (ip not in 原ip):
-                with open(f'{目录}{filename}', 'w') as fp:
+                with open(filename, 'w') as fp:
                     fileStr = fileStr.replace(原ip, ip)
                     fp.write(fileStr)
-                self.msg.emit(f"更新{filename}原ip {原ip}为{ip}")
+                self.msg.emit(f"更新{文件名}原ip {原ip}为{ip}")
                 是否更新 = 是否更新 or True
         if 是否更新:
             self.kill_nginx_processes()
@@ -729,3 +853,8 @@ class UpdateServer(QtCore.QThread):
     def stop(self):
         """ 停止线程 """
         self.running = False  # 修改标志位，让线程退出
+
+
+if __name__ == '__main__':
+    temp = UpdateServer("", "", "")
+    temp.ip检查("59.172.161.180")

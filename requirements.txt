@@ -5,3 +5,4 @@ pywinauto
 pywin32
 psutil
 requests
+aiohttp
