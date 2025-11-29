@@ -259,7 +259,6 @@ class SubWorkerThread(QtCore.QThread):
         except:
             self.msg.emit(f'备份数据失败')
 
-
     def 合区任务(self, 主区目录, 合区目录):
         # 修改合区工具配置 GOM
         路径 = self.data['合区工具']
@@ -378,7 +377,6 @@ class SubWorkerThread(QtCore.QThread):
             if self.点击数据合并完成():
                 # 使用 xcopy 复制文件夹（/E 复制所有子目录，/I 目标是文件夹，/Y 覆盖）
                 subprocess.run(["xcopy", self.data['工作目录']+ '\\data', self.data['工作目录']+ '\\' + 主区目录, "/E", "/I", "/Y"])
-                self.备份数据(主区目录, 合区目录)
             time.sleep(0.5)
             style = win32gui.GetWindowLong(子窗口列表[0], win32con.GWL_STYLE)
             if bool(style & win32con.WS_DISABLED):
@@ -441,7 +439,6 @@ class SubWorkerThread(QtCore.QThread):
             合区目录 = self.data[f'主区文件夹_{合区类型}'].rsplit('_', 1)[0] + '_' + str(端口)
         return 合区目录
 
-
     def 开始合区(self, 合区类型: str ):
         config = configparser.ConfigParser()
         config.read('config.ini')
@@ -462,6 +459,7 @@ class SubWorkerThread(QtCore.QThread):
             config.write(configfile)
         self.停止服务器(主区目录)
         self.停止服务器(合区目录)
+        self.备份数据(主区目录, 合区目录)
         self.合区任务(主区目录, 合区目录)
         self.清理数据(合区目录)
         self.启动服务器(主区目录)
@@ -634,7 +632,7 @@ class CloneThread(QtCore.QThread):
         self.update_status.emit('克隆完成')
         self.update_ui.emit(True)  # 启用 UI
 
-
+# 当是动态ip时。更新微端ip地址重启微端网关. 有了wireguard后。就不用了
 class Updateipaddr(QtCore.QThread):
     msg = QtCore.pyqtSignal(str)
     def __init__(self, listFile: str, serverAddr: str, mainDir: str, running: bool = True):
