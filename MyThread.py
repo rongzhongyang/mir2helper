@@ -11,22 +11,6 @@ from aiohttp import web
 import sqlite3
 
 
-def update_constant_value(db_path_src, db_path_dsc):
-    conn = sqlite3.connect(db_path_src)
-    cursor = conn.cursor()
-    sql_str = f"select ConstValue from db_constant where ConstName = 'version'"
-    cursor.execute(sql_str)
-    result = cursor.fetchone()[0]
-    conn.close()
-
-    conn = sqlite3.connect(db_path_dsc)
-    cursor = conn.cursor()
-    sql_str = rf"update db_constant set ConstValue = {result} where ConstName = 'version'"
-    cursor.execute(sql_str)
-    conn.commit()
-    conn.close()
-
-
 def get_all_files(directory):
     all_files = []
     for root, dirs, files in os.walk(directory):
@@ -44,6 +28,32 @@ class SubWorkerThread(QtCore.QThread):
         super(SubWorkerThread, self).__init__()
         self.data = data
         self.running = True
+
+    def update_constant_value(self, 主备: str, 合备: str):
+        db_version = self.data['数据库版本']
+        if len(db_version) < 2:
+            return
+        try:
+            db_str = os.path.join(主备, r"Mir200\M2Data\ApexM2Data.DB")
+            conn = sqlite3.connect(db_str)
+            cursor = conn.cursor()
+            sql_str = rf"update db_constant set ConstValue = '{db_version}' where ConstName = 'version'"
+            cursor.execute(sql_str)
+            conn.commit()
+            conn.close()
+        except Exception as e:
+            self.msg.emit(rf"{db_str} {str(e)}")
+        try:
+            db_str = os.path.join(合备, r"Mir200\M2Data\ApexM2Data.DB")
+            conn = sqlite3.connect(db_str)
+            cursor = conn.cursor()
+            sql_str = rf"update db_constant set ConstValue = '{db_version}' where ConstName = 'version'"
+            cursor.execute(sql_str)
+            conn.commit()
+            conn.close()
+        except Exception as e:
+            self.msg.emit(rf"{db_str} {str(e)}")
+
 
     def 鼠标点击(self, hwnd, x=0, y=0):
         rect = win32gui.GetWindowRect(hwnd)
@@ -229,14 +239,8 @@ class SubWorkerThread(QtCore.QThread):
         bak = self.data['工作目录'] + '\\bak\\' +time.strftime('%Y{}%m{}%d{}%H{}%M{}', time.localtime()).format('年', '月', '日', '时', '分')
         主备 = self.data['工作目录'] + f'\\{主区目录}\\'
         合备 = self.data['工作目录'] + f'\\{合区目录}\\'
-        try:
-            主数据库路径 = 主备 + 'Mir200\\M2Date\\ApexM2Data.DB'
-            合数据库路径 = 合备 + 'Mir200\\M2Date\\ApexM2Data.DB'
-            # 修改数据库里的版本号
-            update_constant_value(主数据库路径, 合数据库路径)
-            self.msg.emit(f'数据库版本修改成功')
-        except Exception:
-            self.msg.emit(f'数据库版本修改失败')
+        # 修改数据库里的版本号
+        self.update_constant_value(主备, 合备)
         try:
             subprocess.run(["xcopy", f'{主备}LoginSrv\\IDDB', f'{bak}\\{主区目录}\\LoginSrv\\IDDB', "/E", "/I", "/Y"])
             subprocess.run(["xcopy", f'{合备}LoginSrv\\IDDB', f'{bak}\\{合区目录}\\LoginSrv\\IDDB', "/E", "/I", "/Y"])
@@ -397,7 +401,8 @@ class SubWorkerThread(QtCore.QThread):
                     for temStr in strList:  # 获取周循环列表
                         if f'{合区类型}循环分区' in temStr:
                             分区list.append(temStr)
-            except:
+            except Exception as e:
+                self.msg.emit(e)
                 try:
                     with open(列表文件, 'r', encoding='utf-8') as fp:
                         strList = fp.readlines()
@@ -407,7 +412,7 @@ class SubWorkerThread(QtCore.QThread):
                 except:
                     self.msg.emit('读取列表文件出错')
             if not len(分区list):
-                self.msg.emit(f'【{合区类型}循环分区】标签是否存完成？')
+                self.msg.emit(f'【{合区类型}循环分区】标签不存在？')
                 return False
             端口 = 7000 + int(分区list[-1].split('|70')[1][:2])
             合区目录 = self.data[f'合区文件夹_{合区类型}'].rsplit('_', 1)[0] + '_' + str(端口)
@@ -433,7 +438,7 @@ class SubWorkerThread(QtCore.QThread):
                 except:
                     self.msg.emit('读取列表文件出错')
             if not len(分区list):
-                self.msg.emit(f'【{合区类型}循环分区】标签是否存完成？')
+                self.msg.emit(f'【{合区类型}循环分区】标签不存在？')
                 return False
             端口 = 7000 + int(分区list[0].split('|70')[1][:2])
             合区目录 = self.data[f'主区文件夹_{合区类型}'].rsplit('_', 1)[0] + '_' + str(端口)
@@ -449,6 +454,9 @@ class SubWorkerThread(QtCore.QThread):
         if 合区类型 == '日':
             主区目录 = self.获取主区目录(合区类型='周')
         合区目录 = self.获取合区目录(合区类型=合区类型)
+        if not 主区目录 or not 合区目录:
+            self.msg.emit('获取主区合区目录失败')
+            return False
         if 合区目录 == config['conf'][f'大区文件夹_{合区类型}']:  # 如果碰到最大区名，开始循环
             下次合区目录 = config['conf'][f'大区文件夹_{合区类型}']
         else:
@@ -465,6 +473,7 @@ class SubWorkerThread(QtCore.QThread):
         self.启动服务器(主区目录)
         self.启动服务器(合区目录)
         self.更新列表(合区类型=合区类型)
+        return True
 
     def run(self):
         self.msg.emit('开合区任务线程启动...')
@@ -474,15 +483,18 @@ class SubWorkerThread(QtCore.QThread):
             现在星期 = time.strftime("%w{}", time.localtime()).format('周')
             if self.data['合区时间_月'] == 现在日期+现在时间:
                 self.msg.emit('开始运行周合区任务')
-                self.开始合区(合区类型='月')
+                if not self.开始合区(合区类型='月'):
+                    self.msg.emit('开合区任务失败')
                 time.sleep(1)
             if self.data['合区时间_周'] == 现在星期+现在时间:
                 self.msg.emit('开始运行周合区任务')
-                self.开始合区(合区类型='周')
+                if not self.开始合区(合区类型='周'):
+                    self.msg.emit('开合区任务失败')
                 time.sleep(1)
             if self.data['合区时间_日'] == 现在时间:
                 self.msg.emit('开始运行日合区任务')
-                self.开始合区(合区类型='日')
+                if not self.开始合区(合区类型='日'):
+                    self.msg.emit('开合区任务失败')
                 time.sleep(1)
             time.sleep(0.5)
         self.msg.emit('开合区任务线程结')

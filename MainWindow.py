@@ -1,4 +1,7 @@
 import datetime
+
+from PyQt6.QtWidgets import QLineEdit
+
 import MainWindowUI
 from PyQt6 import QtWidgets
 from PyQt6.QtGui import QIcon, QPixmap
@@ -42,6 +45,7 @@ class CMyMainWindow(QtWidgets.QMainWindow, MainWindowUI.Ui_MainWindow):
         self.comboBox.addItems(['全部', '数据库服务器', '帐号登录服务器', '引擎日志服务器', '游戏网关', '角色网关', '登录网关', '[商业版]'])
 
         if config.read('config.ini') and 'conf' in config:
+            self.lineEdit_db_version.setText(config['conf'].get('数据库版本') if config['conf'].get('数据库版本') else '')
             self.lineEdit_workDir.setText(config['conf'].get('工作目录') if config['conf'].get('工作目录') else '')
             self.lineEdit_workDir_2.setText(config['conf'].get('工作目录') if config['conf'].get('工作目录') else '')
             self.lineEdit_mainDir.setText(config['conf'].get('主区文件夹') if config['conf'].get('主区文件夹') else '')
@@ -89,22 +93,8 @@ class CMyMainWindow(QtWidgets.QMainWindow, MainWindowUI.Ui_MainWindow):
                     """)
         self.taskHandle = 0
         # 监听控件失去焦点事件
-        self.lineEdit_workDir.focusOutEvent = self.on_focus_out
-        self.lineEdit_mainDir.focusOutEvent = self.on_focus_out
-        self.lineEdit_minDir.focusOutEvent = self.on_focus_out
-        self.lineEdit_maxDir.focusOutEvent = self.on_focus_out
-        self.lineEdit_workTime.focusOutEvent = self.on_focus_out
-        self.lineEdit_minPort.focusOutEvent = self.on_focus_out
-        self.lineEdit_maxPort.focusOutEvent = self.on_focus_out
-        self.lineEdit_server_addr.focusOutEvent = self.on_focus_out
-        self.pushButton_4.focusOutEvent = self.on_focus_out
-        self.pushButton_select_listfile.focusOutEvent = self.on_focus_out
-        self.pushButton_6.focusOutEvent = self.on_focus_out = self.on_focus_out
-        self.pushButton_7.focusOutEvent = self.on_focus_out = self.on_focus_out
-        self.pushButton_8.focusOutEvent = self.on_focus_out = self.on_focus_out
-        self.pushButton_9.focusOutEvent = self.on_focus_out = self.on_focus_out
-        self.pushButton_10.focusOutEvent = self.on_focus_out = self.on_focus_out
-        self.pushButton_11.focusOutEvent = self.on_focus_out = self.on_focus_out
+        for widget in self.findChildren(QLineEdit):
+            widget.focusOutEvent = self.on_focus_out
         #self.begin() # 禁用 ip 更新
 
     def begin(self):
@@ -124,6 +114,7 @@ class CMyMainWindow(QtWidgets.QMainWindow, MainWindowUI.Ui_MainWindow):
         # 写配置文件
         config = configparser.ConfigParser()
         config['conf'] = {
+            '数据库版本': self.lineEdit_db_version.text(),
             '工作目录': self.lineEdit_workDir.text(),
             '主区文件夹': self.lineEdit_mainDir.text(),
             '小区文件夹_月': self.lineEdit_minDir.text(),
@@ -349,46 +340,23 @@ class CMyMainWindow(QtWidgets.QMainWindow, MainWindowUI.Ui_MainWindow):
     def slot_start(self):
         if self.开合区状态:
             self.pushButton_start.setText('运行')
+            for w in self.findChildren(QLineEdit):
+                w.setDisabled(False)
             self.pushButton_start.setDisabled(False)
-            self.lineEdit_workDir.setDisabled(False)
-            self.lineEdit_mainDir.setDisabled(False)
-            self.lineEdit_minDir.setDisabled(False)
-            self.lineEdit_maxDir.setDisabled(False)
-            self.lineEdit_thisDir.setDisabled(False)
-            self.lineEdit_workTime.setDisabled(False)
-            self.lineEdit_minDir_1.setDisabled(False)
-            self.lineEdit_maxDir_1.setDisabled(False)
-            self.lineEdit_thisDir_1.setDisabled(False)
-            self.lineEdit_workTime_1.setDisabled(False)
-            self.lineEdit_minDir_2.setDisabled(False)
-            self.lineEdit_maxDir_2.setDisabled(False)
-            self.lineEdit_thisDir_2.setDisabled(False)
-            self.lineEdit_workTime_2.setDisabled(False)
             self.pushButton_4.setDisabled(False)
             self.pushButton_select_listfile.setDisabled(False)
             self.开合区状态 = not self.开合区状态
             self.thread.stop()
         else:
             self.pushButton_start.setText('停止')
-            self.lineEdit_workDir.setDisabled(True)
-            self.lineEdit_mainDir.setDisabled(True)
-            self.lineEdit_minDir.setDisabled(True)
-            self.lineEdit_maxDir.setDisabled(True)
-            self.lineEdit_thisDir.setDisabled(True)
-            self.lineEdit_workTime.setDisabled(True)
-            self.lineEdit_minDir_1.setDisabled(True)
-            self.lineEdit_maxDir_1.setDisabled(True)
-            self.lineEdit_thisDir_1.setDisabled(True)
-            self.lineEdit_workTime_1.setDisabled(True)
-            self.lineEdit_minDir_2.setDisabled(True)
-            self.lineEdit_maxDir_2.setDisabled(True)
-            self.lineEdit_thisDir_2.setDisabled(True)
-            self.lineEdit_workTime_2.setDisabled(True)
+            for w in self.findChildren(QLineEdit):
+                w.setDisabled(True)
             self.pushButton_4.setDisabled(True)
             self.pushButton_select_listfile.setDisabled(True)
             self.开合区状态 = not self.开合区状态
             # 创建子线程和 Worker 对象
             self.thread = SubWorkerThread({
+                '数据库版本': self.lineEdit_db_version.text(),
                 '工作目录': self.lineEdit_workDir.text(),
                 '主区文件夹_月': self.lineEdit_mainDir.text(),
                 '小区文件夹_月': self.lineEdit_minDir.text(),
